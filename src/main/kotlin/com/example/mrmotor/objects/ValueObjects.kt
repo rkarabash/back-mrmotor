@@ -1,6 +1,6 @@
 package com.example.mrmotor.objects
 
-import com.example.mrmotor.models.Post
+import com.example.mrmotor.constants.PostType
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 
@@ -12,6 +12,16 @@ data class UserVO(
     val avatar: String
 )
 
+data class PostVO(
+    val id: Long,
+    val title: String,
+    val source: String,
+    val content: String,
+    val type: PostType,
+    val thumbnail: String,
+    val like: Boolean
+)
+
 data class TokenVO(
     val token: String
 )
@@ -21,7 +31,7 @@ data class UserListVO(
 )
 
 data class PostListVO(
-    val posts: List<Post>
+    val posts: List<PostVO>
 )
 
 data class ShortQuizListVO(
@@ -68,19 +78,32 @@ data class QuizResultListVO(
     val quizResults: List<QuizResultVO>
 )
 
+data class TopResultVO(
+    val id: Long,
+    val achieved: Int,
+    val userId: Long,
+    val name: String
+)
+
+data class TopVO(
+    val rating: List<TopResultVO>,
+    val amount: Int,
+    val quiz: ShortQuizVO
+)
+
 data class PasswordForgotVO(
     @Email
     @NotEmpty
-    val email: String = "abs@mail.com"
+    val email: String = ""
 )
 
 data class PasswordResetVO(
     @NotEmpty
-    val password: String = "123",
+    val password: String = "",
     @NotEmpty
-    val confirmPassword: String = "123",
+    val confirmPassword: String = "",
     @NotEmpty
-    val token: String = "123"
+    val token: String = ""
 )
 
 data class MailVO(

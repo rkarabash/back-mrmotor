@@ -11,8 +11,14 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
+/***
+ * Класс-обработчик невалидных запросов на бизнес логику информационных постов
+ */
 @ControllerAdvice
 class PostControllerAdvice {
+    /***
+     * Метод, обрабатывающий исключение, вызванного при подаче неверного id информационного поста
+     */
     @ExceptionHandler(InvalidPostIdException::class)
     fun invalidId(invalidPostIdException: InvalidPostIdException):
             ResponseEntity<ErrorResponse> {
@@ -23,6 +29,9 @@ class PostControllerAdvice {
         return ResponseEntity.badRequest().body(res)
     }
 
+    /***
+     * Метод, обрабатывающий исключение, вызванного при подаче невалидных данных информационного поста
+     */
     @ExceptionHandler(PostDataEmptyException::class)
     fun emptyData(postDataEmptyException: PostDataEmptyException):
             ResponseEntity<ErrorResponse> {
@@ -33,6 +42,9 @@ class PostControllerAdvice {
         return ResponseEntity.unprocessableEntity().body(res)
     }
 
+    /***
+     * Метод, обрабатывающий исключение, вызванного при получение невалидного id пометки "Нравится"
+     */
     @ExceptionHandler(NoLikeFoundException::class)
     fun noLike(noLikeFoundException: NoLikeFoundException):
             ResponseEntity<ErrorResponse> {
@@ -43,6 +55,9 @@ class PostControllerAdvice {
         return ResponseEntity.badRequest().body(res)
     }
 
+    /***
+     * Метод, обрабатывающий исключение, вызванного при обнаружение непривязанной к посту пометки "Нравится"
+     */
     @ExceptionHandler(SealedLikeFoundException::class)
     fun sealedLike(sealedLikeFoundException: SealedLikeFoundException):
             ResponseEntity<ErrorResponse> {

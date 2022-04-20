@@ -1,5 +1,8 @@
 package com.example.mrmotor.constants
 
+/***
+ * Класс-перечисление, представляющий коды обработанных исключений
+ */
 enum class ResponseConstants(val value: String) {
     USERNAME_UNAVAILABLE("USR_001"),
     INVALID_USER_ID("USR_002"),

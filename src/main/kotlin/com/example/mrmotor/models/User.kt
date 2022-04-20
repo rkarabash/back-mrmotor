@@ -5,6 +5,9 @@ import javax.persistence.*
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
+/***
+ * Класс-сущность, представляющий объект пользователя
+ */
 @Entity
 @Table(name = "`user`")
 @EntityListeners(UserListener::class)
@@ -21,7 +24,7 @@ class User(
     var name: String = "User",
     @Column(columnDefinition = "TEXT")
     var avatar: String = ""
-){
+) {
     @OneToMany(mappedBy = "user", targetEntity = Like::class)
     private var likes: Collection<Like>? = null
 

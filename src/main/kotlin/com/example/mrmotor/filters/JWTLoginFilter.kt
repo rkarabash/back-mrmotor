@@ -15,16 +15,28 @@ import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.io.IOException
+
+/***
+ * Класс-фильтр, ответственный за аутентификацию в REST API
+ */
 @CrossOrigin
 class JWTLoginFilter(url: String, authManager: AuthenticationManager) :
-    AbstractAuthenticationProcessingFilter(AntPathRequestMatcher(url)){
+    AbstractAuthenticationProcessingFilter(AntPathRequestMatcher(url)) {
     init {
         authenticationManager = authManager
     }
-    @Throws(AuthenticationException::class, IOException::class,
-        ServletException::class)
-    override fun attemptAuthentication( req: HttpServletRequest,
-                                        res: HttpServletResponse): Authentication{
+
+    /***
+     * Метод, производящий авторизацию пользователя
+     */
+    @Throws(
+        AuthenticationException::class, IOException::class,
+        ServletException::class
+    )
+    override fun attemptAuthentication(
+        req: HttpServletRequest,
+        res: HttpServletResponse
+    ): Authentication {
         val credentials = ObjectMapper()
             .readValue(req.inputStream, AccountCredentials::class.java)
 
@@ -37,11 +49,15 @@ class JWTLoginFilter(url: String, authManager: AuthenticationManager) :
         )
     }
 
+    /***
+     * Метод, передающий запрос дальше при успешной авторизации
+     */
     @Throws(IOException::class, ServletException::class)
     override fun successfulAuthentication(
         req: HttpServletRequest,
         res: HttpServletResponse, chain: FilterChain,
-        auth: Authentication) {
+        auth: Authentication
+    ) {
         res.setHeader("Access-Control-Allow-Origin", "*")
         TokenAuthenticationService.addAuthentication(res, auth.name)
     }

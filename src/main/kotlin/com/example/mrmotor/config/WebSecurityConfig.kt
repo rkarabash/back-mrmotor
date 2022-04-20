@@ -17,14 +17,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsUtils
 
+
+/***
+ * Класс-конфигурация Spring Security
+ */
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(val userDetailsService: AppUserDetailsService) : WebSecurityConfigurerAdapter() {
+    /***
+     * Метод, конфигурирующий AuthenticationManager
+     */
     @Bean
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
     }
 
+    /***
+     * Метод, конфигурирующий параметры безопасности
+     */
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http
@@ -43,11 +53,19 @@ class WebSecurityConfig(val userDetailsService: AppUserDetailsService) : WebSecu
             .permitAll()
             .antMatchers(HttpMethod.GET, "/posts/news")
             .permitAll()
+            .antMatchers(HttpMethod.GET, "/posts/news_limit**")
+            .permitAll()
             .antMatchers(HttpMethod.GET, "/posts/get**")
             .permitAll()
             .antMatchers(HttpMethod.GET, "/posts/get_by_type**")
             .permitAll()
+            .antMatchers(HttpMethod.GET, "/posts/get_by_type_limit**")
+            .permitAll()
+            .antMatchers(HttpMethod.GET, "/posts/search**")
+            .permitAll()
             .antMatchers(HttpMethod.GET, "/quiz")
+            .permitAll()
+            .antMatchers(HttpMethod.GET, "/quiz/limit**")
             .permitAll()
             .antMatchers(HttpMethod.POST, "/login").permitAll()
             .anyRequest().authenticated()
@@ -65,6 +83,9 @@ class WebSecurityConfig(val userDetailsService: AppUserDetailsService) : WebSecu
             )
     }
 
+    /***
+     * Метод, конфигурирующий хэширование пароля
+     */
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService<UserDetailsService>(userDetailsService)

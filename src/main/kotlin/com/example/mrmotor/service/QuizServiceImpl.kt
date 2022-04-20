@@ -10,6 +10,9 @@ import com.example.mrmotor.repositories.QuizResultRepository
 import org.springframework.stereotype.Service
 import kotlin.jvm.Throws
 
+/***
+ * Класс, реализующий бизнес логику работы с квизами
+ */
 @Service
 class QuizServiceImpl(
     val quizRepository: QuizRepository,
@@ -17,14 +20,30 @@ class QuizServiceImpl(
     val quizItemRepository: QuizItemRepository,
     val quizResultRepository: QuizResultRepository
 ) : QuizService {
+    /***
+     * Метод бизнес логики для получения списка квизов
+     */
     override fun listQuizzes(): List<Quiz> {
-        return quizRepository.findAll().mapTo(ArrayList()) { it }
+        return quizRepository.findAllByOrderByIdDesc()
     }
 
+    /***
+     * Метод бизнес логики для получения списка квизов с ограничением на кол-во
+     */
+    override fun listQuizzesWithLimit(offset: Int, limit: Int): List<Quiz> {
+        return quizRepository.findAllWithLimit(offset, limit)
+    }
+
+    /***
+     * Метод бизнес логики для получения списка собственных квизов
+     */
     override fun getMyQuizzes(currentUser: User): List<Quiz> {
-        return quizRepository.findByAuthorId(currentUser.id)
+        return quizRepository.findByAuthorIdOrderById(currentUser.id)
     }
 
+    /***
+     * Метод бизнес логики для получения квиза по его id
+     */
     @Throws(InvalidQuizIdException::class)
     override fun getQuiz(id: Long): Quiz? {
         val quizOptional = quizRepository.findById(id)
@@ -34,6 +53,9 @@ class QuizServiceImpl(
         throw InvalidQuizIdException("Quiz with id of '$id' does not exist.")
     }
 
+    /***
+     * Метод бизнес логики для создания квиза
+     */
     @Throws(QuizDataEmptyException::class)
     override fun createQuiz(currentUser: User, quizDetails: QuizRO): Quiz {
         if (quizDetails.title.isNotEmpty()) {
@@ -48,6 +70,9 @@ class QuizServiceImpl(
         throw QuizDataEmptyException("Title field is required.")
     }
 
+    /***
+     * Метод бизнес логики для редактирования квиза по его id
+     */
     @Throws(
         InvalidQuizIdException::class,
         QuizDataEmptyException::class,
@@ -75,6 +100,9 @@ class QuizServiceImpl(
         throw InvalidQuizIdException("Quiz with id of '$id' does not exist.")
     }
 
+    /***
+     * Метод бизнес логики для удаления квиза по его id
+     */
     @Throws(
         SealedQuizResultFoundException::class,
         InvalidQuizIdException::class,
@@ -99,6 +127,9 @@ class QuizServiceImpl(
         throw InvalidQuizIdException("Quiz with id of '$id' does not exist.")
     }
 
+    /***
+     * Метод бизнес-логики для записи результата прохождения квиза
+     */
     @Throws(InvalidQuizIdException::class, QuizResultDataEmptyException::class)
     override fun saveQuizResult(currentUser: User, achieved: Int, id: Long): Boolean {
         val quizOptional = quizRepository.findById(id)
@@ -121,6 +152,9 @@ class QuizServiceImpl(
         throw InvalidQuizIdException("Quiz with id of '${id}' does not exist.")
     }
 
+    /***
+     * Метод бизнес-логики для удаления результата прохождения квиза
+     */
     @Throws(NoQuizResultFoundException::class)
     override fun deleteQuizResult(currentUser: User, quizId: Long): Boolean {
         val quizResult = quizResultRepository.findByUserIdAndQuizId(currentUser.id, quizId)
@@ -131,10 +165,23 @@ class QuizServiceImpl(
         throw NoQuizResultFoundException("The user '${currentUser.name}' has not quiz result to quiz with id '$quizId'")
     }
 
+    /***
+     * Метод бизнес логики для получения списка результатов прохождения квизов
+     */
     override fun getQuizResults(currentUser: User): List<QuizResult> {
         return quizResultRepository.findByUserId(currentUser.id)
     }
 
+    /***
+     * Метод бизнес логики для получения рейтинга пользователей прошедших квиз с ID
+     */
+    override fun getTop(quizId: Long): List<QuizResult> {
+        return quizResultRepository.findByQuizIdOrderByAchievedDesc(quizId)
+    }
+
+    /***
+     * Метод бизнес логики для получения списка вопросов квиза по его id квиза
+     */
     @Throws(InvalidQuizIdException::class)
     override fun getItemsByQuizId(quizId: Long): List<QuizItem> {
         val quizOptional = quizRepository.findById(quizId)
@@ -144,6 +191,9 @@ class QuizServiceImpl(
         throw InvalidQuizIdException("Quiz with id of '$quizId' does not exist.")
     }
 
+    /***
+     * Метод бизнес логики для создания вопроса квиза
+     */
     @Throws(InvalidQuizIdException::class, QuizItemDataEmptyException::class)
     override fun saveQuizItem(quizItemDetails: QuizItemRO, id: Long): QuizItem {
         val quizOptional = quizRepository.findById(id)
@@ -160,6 +210,9 @@ class QuizServiceImpl(
         throw InvalidQuizIdException("Quiz with id of '${id}' does not exist.")
     }
 
+    /***
+     * Метод бизнес логики для редактирования вопроса квиза
+     */
     @Throws(InvalidQuizItemIdException::class, QuizItemDataEmptyException::class)
     override fun updateQuizItem(quizItemDetails: QuizItemVO, id: Long): QuizItem {
         val quizItemOptional = quizItemRepository.findById(id)
@@ -175,6 +228,9 @@ class QuizServiceImpl(
         throw InvalidQuizItemIdException("Quiz item with id = $id does not exist")
     }
 
+    /***
+     * Метод бизнес логики для удаления вопроса квиза
+     */
     @Throws(InvalidQuizItemIdException::class, SealedQuizAnswerFoundException::class)
     override fun deleteQuizItem(id: Long): Boolean {
         val quizItemOptional = quizItemRepository.findById(id)
@@ -188,6 +244,9 @@ class QuizServiceImpl(
         throw InvalidQuizItemIdException("Quiz item with id = $id does not exist")
     }
 
+    /***
+     * Метод бизнес логики для получения списка ответов на вопрос квиза по его id вопроса
+     */
     @Throws(InvalidQuizItemIdException::class)
     override fun getAnswersByQuizItemId(quizItemId: Long): List<QuizAnswer> {
         val quizItemOptional = quizItemRepository.findById(quizItemId)
@@ -197,6 +256,9 @@ class QuizServiceImpl(
         throw InvalidQuizItemIdException("Quiz item with id = $quizItemId does not exist")
     }
 
+    /***
+     * Метод бизнес логики для создания ответа на вопрос квиза
+     */
     @Throws(InvalidQuizItemIdException::class, QuizAnswerDataEmptyException::class)
     override fun saveQuizAnswer(quizAnswerDetails: QuizAnswerRO, id: Long): QuizAnswer {
         val quizItemOptional = quizItemRepository.findById(id)
@@ -212,6 +274,9 @@ class QuizServiceImpl(
         throw InvalidQuizItemIdException("Quiz item with id of '${id}' does not exist.")
     }
 
+    /***
+     * Метод бизнес логики для редактирования ответа на вопрос квиза
+     */
     @Throws(InvalidQuizAnswerIdException::class, QuizAnswerDataEmptyException::class)
     override fun updateQuizAnswer(quizAnswerDetails: QuizAnswerVO, id: Long): QuizAnswer {
         val quizAnswerOptional = quizAnswerRepository.findById(id)
@@ -227,6 +292,9 @@ class QuizServiceImpl(
         throw InvalidQuizAnswerIdException("Quiz answer with id = $id does not exist")
     }
 
+    /***
+     * Метод бизнес логики для удаления ответа на вопрос квиза
+     */
     @Throws(InvalidQuizAnswerIdException::class)
     override fun deleteQuizAnswer(id: Long): Boolean {
         val quizAnswerOptional = quizAnswerRepository.findById(id)

@@ -2,6 +2,9 @@ package com.example.mrmotor.models
 
 import javax.persistence.*
 
+/***
+ * Класс-сущность, представляющий объект ответа на вопрос квиза
+ */
 @Entity
 @Table
 class QuizAnswer(

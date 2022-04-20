@@ -8,11 +8,17 @@ import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.SpringTemplateEngine
 import java.nio.charset.StandardCharsets
 
+/***
+ * Класс, реализующий бизнес логику для отправления Email-сообщения со сбросом пароля
+ */
 @Service
 class EmailService(
     val emailSender: JavaMailSender,
     val templateEngine: SpringTemplateEngine
 ) {
+    /***
+     * Метод для отправки Email-сообщения со сбросом пароля
+     */
     fun sendMail(mail: MailVO) {
         val message = emailSender.createMimeMessage()
         val helper =

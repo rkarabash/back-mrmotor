@@ -11,11 +11,19 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import java.io.IOException
 
+/***
+ * Класс-фильтр, ответственный за фильтрацию разрешенных и несанкционированных запросов к REST API
+ */
 class JWTAuthenticationFilter : GenericFilterBean() {
+    /***
+     * Метод, производящий фильтрацию запросов
+     */
     @Throws(IOException::class, ServletException::class)
-    override fun doFilter(request: ServletRequest,
-                          response: ServletResponse,
-                          filterChain: FilterChain) {
+    override fun doFilter(
+        request: ServletRequest,
+        response: ServletResponse,
+        filterChain: FilterChain
+    ) {
         val authentication = TokenAuthenticationService
             .getAuthentication(request as HttpServletRequest)
         SecurityContextHolder.getContext().authentication = authentication

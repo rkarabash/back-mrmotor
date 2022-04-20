@@ -3,8 +3,12 @@ package com.example.mrmotor.service
 import com.example.mrmotor.models.*
 import com.example.mrmotor.objects.*
 
+/***
+ * Интерфейс, опрделяющий бизнес логику работы с квизами
+ */
 interface QuizService {
     fun listQuizzes(): List<Quiz>
+    fun listQuizzesWithLimit(offset: Int, limit: Int): List<Quiz>
     fun getMyQuizzes(currentUser: User): List<Quiz>
 
     fun getQuiz(id: Long): Quiz?
@@ -15,6 +19,7 @@ interface QuizService {
     fun saveQuizResult(currentUser: User, achieved: Int, id: Long): Boolean
     fun deleteQuizResult(currentUser: User, quizId: Long): Boolean
     fun getQuizResults(currentUser: User): List<QuizResult>
+    fun getTop(quizId: Long): List<QuizResult>
 
     fun getItemsByQuizId(quizId: Long): List<QuizItem>
     fun saveQuizItem(quizItemDetails: QuizItemRO, id: Long): QuizItem

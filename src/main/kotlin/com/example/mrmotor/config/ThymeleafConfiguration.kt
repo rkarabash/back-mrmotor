@@ -7,9 +7,16 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.thymeleaf.spring5.SpringTemplateEngine
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver
 
+
+/***
+ * Класс-конфигурация Spring ThymeLeaf
+ */
 @Configuration
 @EnableWebMvc
 class ThymeleafConfiguration {
+    /***
+     * Метод, конфигурирующий SpringTemplateEngine
+     */
     @Bean
     fun templateEngine(): SpringTemplateEngine {
         val templateEngine = SpringTemplateEngine()
@@ -17,6 +24,9 @@ class ThymeleafConfiguration {
         return templateEngine
     }
 
+    /***
+     * Метод, конфигурирующий SpringResourceTemplateResolver
+     */
     @Bean
     fun thymeLeafTemplateResolver(): SpringResourceTemplateResolver {
         val templateResolver = SpringResourceTemplateResolver()

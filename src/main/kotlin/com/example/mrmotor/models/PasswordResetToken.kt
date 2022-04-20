@@ -3,6 +3,9 @@ package com.example.mrmotor.models
 import java.util.*
 import javax.persistence.*
 
+/***
+ * Класс-сущность, представляющий объект токена сброса пароля"
+ */
 @Entity
 class PasswordResetToken(
     @Id
@@ -15,8 +18,4 @@ class PasswordResetToken(
     val user: User,
     @Column(nullable = false)
     var expiryDate: Date = Calendar.getInstance().time
-){
-    fun isExpired(): Boolean{
-        return Date().after(expiryDate)
-    }
-}
+)

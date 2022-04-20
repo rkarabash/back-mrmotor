@@ -3,6 +3,9 @@ package com.example.mrmotor.models
 import com.example.mrmotor.constants.PostType
 import javax.persistence.*
 
+/***
+ * Класс-сущность, представляющий объект информационного поста
+ */
 @Entity
 @Table(name = "`post`")
 class Post(

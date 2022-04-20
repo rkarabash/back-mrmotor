@@ -9,8 +9,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.lang.RuntimeException
 
+/***
+ * Класс-обработчик невалидных запросов на бизнес логику квизов
+ */
 @ControllerAdvice
 class QuizControllerAdvice {
+    /***
+     * Метод, обрабатывающий исключение, вызванного при подаче неверного id квиза и его элементов
+     */
     @ExceptionHandler(
         InvalidQuizIdException::class,
         InvalidQuizItemIdException::class,
@@ -25,6 +31,9 @@ class QuizControllerAdvice {
         return ResponseEntity.badRequest().body(res)
     }
 
+    /***
+     * Метод, обрабатывающий исключение, вызванного при при попытке пользователя удалить или редактировать квиз другого пользователя
+     */
     @ExceptionHandler(FraudAuthorException::class)
     fun fraudAuthor(runtimeException: RuntimeException):
             ResponseEntity<ErrorResponse> {
@@ -35,6 +44,9 @@ class QuizControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res)
     }
 
+    /***
+     * Метод, обрабатывающий исключение, вызванного при подаче невалидных данных квиза и его элементов
+     */
     @ExceptionHandler(
         QuizDataEmptyException::class,
         QuizItemDataEmptyException::class,
@@ -50,6 +62,9 @@ class QuizControllerAdvice {
         return ResponseEntity.badRequest().body(res)
     }
 
+    /***
+     * Метод, обрабатывающий исключение, вызванного при обнаружение непривязанных элементов к квизу
+     */
     @ExceptionHandler(
         SealedQuizItemFoundException::class,
         SealedQuizAnswerFoundException::class,
@@ -64,6 +79,9 @@ class QuizControllerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(res)
     }
 
+    /***
+     * Метод, обрабатывающий исключение, вызванного при получение невалидного id результата прохождения квиза
+     */
     @ExceptionHandler(NoQuizResultFoundException::class)
     fun noQuizResult(runtimeException: RuntimeException):
             ResponseEntity<ErrorResponse> {

@@ -10,12 +10,18 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.web.bind.annotation.*
 
+/***
+ * Класс-контроллер, отвечающий за обработку запросов, связанных с аутентификацией пользователя
+ */
 @RestController
 @CrossOrigin
 class LoginController(
     val authenticationManager: AuthenticationManager,
     val userRepository: UserRepository
 ) {
+    /***
+     * Метод обработки конечной точки API для авторизации пользователя
+     */
     @PostMapping("/ulogin")
     fun login(@RequestBody credentials: AccountCredentials): ResponseEntity<TokenVO> {
         authenticationManager.authenticate(
